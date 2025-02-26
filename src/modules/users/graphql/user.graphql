@@ -1,0 +1,35 @@
+type User {
+  id: Int!
+  username: String!
+  email: String!
+  roles: [String]
+}
+
+type UsersResponse {
+  data: [User!]!
+  total: Int!
+}
+
+input UserInput {
+  username: String!
+  email: String!
+  password: String!
+  roles: [String]
+}
+
+input UpdateUserInput {
+  id: Int!
+  email: String
+  password: String
+}
+
+type Query {
+  users(pagination: PaginationInput): UsersResponse!
+  user(id: Int!): User
+}
+
+type Mutation {
+  createUser(input: UserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
+  deleteUser(id: Int!): Boolean!
+}

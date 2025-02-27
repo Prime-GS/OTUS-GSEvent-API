@@ -1,11 +1,12 @@
 import { Resolver, Args, Mutation, Query } from '@nestjs/graphql';
+
+import { UpdateUserDTO } from '../../users/dto/updateUser.dto';
+import { AuthUser, CurrentUser } from '../decorators';
+import { IAuthResponse } from '../interfaces';
 import { User } from '../../users/entities';
 import { UserDTO } from '../../users/dto';
-import { IAuthResponse } from '../interfaces';
-import { AuthUser, CurrentUser } from '../decorators';
 import { AuthService } from '../services';
 import { LoginDTO } from '../dto';
-import { UpdateUserDTO } from '../../users/dto/updateUser.dto';
 
 @Resolver()
 export class AuthResolver {

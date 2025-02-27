@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { Module } from '@nestjs/common';
 
-import { UsersModule } from '../users/users.module';
-import { Session } from './entities';
 import { AuthService, SessionService } from './services';
+import { UsersModule } from '../users/users.module';
 import { AuthResolver } from './resolvers';
 import { JwtStrategy } from './strategies';
 import { RolesGuard } from './guards';
+import { Session } from './entities';
 
 @Module({
   imports: [

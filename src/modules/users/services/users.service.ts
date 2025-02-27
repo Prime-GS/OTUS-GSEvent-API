@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
+import { IListResponse, IPaginationInput } from '../../../common/interfaces';
+import { UpdateUserDTO } from '../dto/updateUser.dto';
 import { User } from '../entities';
 import { UserDTO } from '../dto';
-import { UpdateUserDTO } from '../dto/updateUser.dto';
-import { IListResponse, IPaginationInput } from '../../../common/interfaces';
 
 @Injectable()
 export class UsersService {

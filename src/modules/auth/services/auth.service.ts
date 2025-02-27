@@ -3,14 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
-import { UsersService } from '../../users/services';
-import { UserDTO } from '../../users/dto';
-import { IAuthResponse, IJwtPayload } from '../interfaces';
-import { LoginDTO } from '../dto';
-import { User } from '../../users/entities';
-import { SessionService } from './session.service';
-import { Session } from '../entities';
 import { UpdateUserDTO } from '../../users/dto/updateUser.dto';
+import { IAuthResponse, IJwtPayload } from '../interfaces';
+import { UsersService } from '../../users/services';
+import { SessionService } from './session.service';
+import { User } from '../../users/entities';
+import { UserDTO } from '../../users/dto';
+import { Session } from '../entities';
+import { LoginDTO } from '../dto';
 
 @Injectable()
 export class AuthService {

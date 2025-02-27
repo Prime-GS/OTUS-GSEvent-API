@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
 import { User } from '../../users/entities';
 
 @Entity({ name: 'sessions' })

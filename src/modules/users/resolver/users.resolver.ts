@@ -1,11 +1,11 @@
 import { Resolver, Args, Mutation, Query } from '@nestjs/graphql';
 
 import { IListResponse, IPaginationInput } from '../../../common/interfaces';
+import { AuthUser, Roles, UserRole } from '../../auth/decorators';
+import { UpdateUserDTO } from '../dto/updateUser.dto';
 import { UsersService } from '../services';
 import { User } from '../entities';
 import { UserDTO } from '../dto';
-import { UpdateUserDTO } from '../dto/updateUser.dto';
-import { AuthUser, Roles, UserRole } from '../../auth/decorators';
 
 @Resolver('User')
 export class UsersResolver {

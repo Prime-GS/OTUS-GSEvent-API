@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
 import { join } from 'path';
 
 import { UsersModule } from './modules/users/users.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -25,8 +26,9 @@ import { AuthModule } from './modules/auth/auth.module';
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
       autoLoadEntities: true,
     }),
-    UsersModule,
     AuthModule,
+    CategoriesModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

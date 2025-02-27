@@ -11,3 +11,7 @@ input PaginationInput {
 input FilterInput {
   query: String!
 }
+
+type CheckResponse {
+  success: Boolean!
+}

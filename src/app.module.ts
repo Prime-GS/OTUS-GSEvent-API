@@ -5,9 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { join } from 'path';
 
-import { UsersModule } from './modules/users/users.module';
-import { CategoriesModule } from './modules/categories/categories.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { EventsModule } from './modules/events/events.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     AuthModule,
     CategoriesModule,
+    EventsModule,
     UsersModule,
   ],
   controllers: [],

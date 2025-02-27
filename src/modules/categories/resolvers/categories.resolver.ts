@@ -8,7 +8,7 @@ import { Category } from '../entities';
 import { CategoryDTO } from '../dto';
 
 @Resolver('Category')
-export class CategorysResolver {
+export class CategoriesResolver {
   constructor(private readonly categorysService: CategoriesService) {}
 
   @Query()

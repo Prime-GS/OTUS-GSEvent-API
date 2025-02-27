@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 
 import { IFilter, IPaginationInput } from '../../../common/interfaces';
 import { IListResponse } from '../../../common/interfaces';
@@ -36,6 +36,10 @@ export class CategoriesService {
 
   findById(id: number): Promise<Category | null> {
     return this.categoriesRepository.findOneBy({ id });
+  }
+
+  findByIds(ids: number[]): Promise<Category[] | null> {
+    return this.categoriesRepository.find({ where: { id: In(ids) } });
   }
 
   async findByIdOrFail(id: number) {

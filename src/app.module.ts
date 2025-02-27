@@ -6,13 +6,13 @@ import { Module } from '@nestjs/common';
 import { join } from 'path';
 
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       typePaths: ['./**/*.graphql'],
-      playground: true,
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
@@ -26,6 +26,7 @@ import { UsersModule } from './modules/users/users.module';
       autoLoadEntities: true,
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

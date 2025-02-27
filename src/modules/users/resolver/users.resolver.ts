@@ -5,12 +5,14 @@ import { UsersService } from '../services';
 import { User } from '../entities';
 import { UserDTO } from '../dto';
 import { UpdateUserDTO } from '../dto/updateUser.dto';
+import { AuthUser, Roles, UserRole } from '../../auth/decorators';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query()
+  @AuthUser()
   users(
     @Args('pagination') pagination?: IPaginationInput,
   ): Promise<IListResponse<User>> {
@@ -18,24 +20,29 @@ export class UsersResolver {
   }
 
   @Query()
+  @AuthUser()
   user(@Args('id') id: number) {
     return this.usersService.findById(id);
   }
 
   @Mutation()
+  @AuthUser()
+  @Roles(UserRole.admin)
   createUser(@Args('input') input: UserDTO) {
     return this.usersService.create(input);
   }
 
   @Mutation()
+  @AuthUser()
+  @Roles(UserRole.admin)
   updateUser(@Args('input') input: UpdateUserDTO) {
     return this.usersService.updateProfile(input);
   }
 
   @Mutation()
+  @AuthUser()
+  @Roles(UserRole.admin)
   deleteUser(@Args('id') id: number) {
     return this.usersService.deleteUser(id);
   }
-
-  // TODO add admin check
 }

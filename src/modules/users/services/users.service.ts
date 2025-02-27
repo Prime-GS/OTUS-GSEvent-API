@@ -29,9 +29,7 @@ export class UsersService {
   }
 
   async findById(id: number) {
-    const user = await this.usersRepository.findOneBy({ id });
-
-    return user;
+    return await this.usersRepository.findOneBy({ id });
   }
 
   async findByIdOrFail(id: number) {
@@ -44,10 +42,10 @@ export class UsersService {
     return user;
   }
 
-  async findByEmail(email?: string) {
-    const user = await this.usersRepository.findOneBy({ email });
-
-    return user;
+  async findUser(login?: string) {
+    return this.usersRepository.findOne({
+      where: [{ email: login }, { username: login }],
+    });
   }
 
   async findByEmailOrFail(email: string) {
@@ -61,7 +59,7 @@ export class UsersService {
   }
 
   async create(input: UserDTO) {
-    const isTaken = !!(await this.findByEmail(input.email));
+    const isTaken = !!(await this.findUser(input.email));
 
     if (isTaken) {
       throw new BadRequestException(`${input.email} уже занят`);
@@ -83,7 +81,7 @@ export class UsersService {
     const user = await this.findByIdOrFail(input.id);
 
     if (!!input.email && user.email !== input.email) {
-      const isTaken = !!(await this.findByEmail(input.email ?? undefined));
+      const isTaken = !!(await this.findUser(input.email ?? undefined));
       if (isTaken) {
         throw new BadRequestException(`${input.email} уже занят`);
       }

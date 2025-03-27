@@ -39,7 +39,7 @@ export class CategoriesService {
   }
 
   findByIds(ids: number[]): Promise<Category[] | null> {
-    return this.categoriesRepository.find({ where: { id: In(ids) } });
+    return this.categoriesRepository.find({ where: ids.map((id) => ({ id })) });
   }
 
   async findByIdOrFail(id: number) {

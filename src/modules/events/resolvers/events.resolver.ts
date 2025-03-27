@@ -1,8 +1,22 @@
-import { Resolver, Args, Mutation, Query } from '@nestjs/graphql';
+import {
+  Resolver,
+  Args,
+  Mutation,
+  Query,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 
-import { IFilter, IPaginationInput } from '../../../common/interfaces';
-import { AuthUser, Roles, UserRole } from '../../auth/decorators';
-import { IListResponse } from '../../../common/interfaces';
+import {
+  AuthUser,
+  CurrentUser,
+  Roles,
+  UserRole,
+} from '@/modules/auth/decorators';
+import { IListResponse } from '@/common/interfaces';
+import { IFilter, IPaginationInput } from '@/common/interfaces';
+import { User } from '@/modules/users/entities';
+
 import { EventsService } from '../services';
 import { Event } from '../entities';
 import { EventDTO } from '../dto';
@@ -25,6 +39,14 @@ export class EventsResolver {
   event(@Args('id') id: number) {
     return this.eventsService.findById(id);
   }
+  @ResolveField()
+  async categoriesIds(@Parent() event: Event) {
+    return event.categories?.map((c) => c.id) ?? [];
+  }
+  @ResolveField()
+  async subscribersIds(@Parent() event: Event) {
+    return event.subscribers?.map((c) => c.id) ?? [];
+  }
 
   @Mutation()
   @AuthUser()
@@ -34,15 +56,13 @@ export class EventsResolver {
 
   @Mutation()
   @AuthUser()
-  @Roles(UserRole.admin)
-  upsertEvent(@Args('input') EventInput: EventDTO) {
-    return this.eventsService.upsertEvent(EventInput);
+  upsertEvent(@CurrentUser() user: User, @Args('input') eventInput: EventDTO) {
+    return this.eventsService.upsertEvent(eventInput, user);
   }
 
   @Mutation()
   @AuthUser()
-  @Roles(UserRole.admin)
-  deleteEvent(@Args('id') id: number) {
-    return this.eventsService.deleteEvent(id);
+  deleteEvent(@CurrentUser() user: User, @Args('id') id: number) {
+    return this.eventsService.deleteEvent(id, user);
   }
 }

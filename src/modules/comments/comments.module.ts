@@ -1,13 +1,12 @@
 import { EventComment } from './entities/comments.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
-
-import { CategoriesResolver } from './resolvers';
-import { CategoriesService } from './services';
+import { CommentsResolver } from './resolvers';
+import { CommentsService } from './services';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EventComment])],
-  providers: [CategoriesResolver, CategoriesService],
-  exports: [CategoriesService],
+  providers: [CommentsResolver, CommentsService],
+  exports: [CommentsService],
 })
 export class CommentsModule {}

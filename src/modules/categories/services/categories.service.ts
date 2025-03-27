@@ -57,6 +57,10 @@ export class CategoriesService {
           ...input,
         });
 
+    category.title = input.title;
+    category.description = input.description ?? null;
+    category.color = input.color ?? null;
+
     return this.categoriesRepository.save(category);
   }
 

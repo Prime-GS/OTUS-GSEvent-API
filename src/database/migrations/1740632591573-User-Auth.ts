@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import 'dotenv/config';
 
 import { User } from '../../modules/users/entities';
 
@@ -23,7 +24,7 @@ export class UserAuth1740632591573 implements MigrationInterface {
 
     const admin = queryRunner.manager.create(User, {
       username: 'Admin',
-      email: process.env.ADMIN_EMAIL,
+      email: process.env.ADMIN_EMAIL || 'admin@gmail.com',
       password: hashedPassword,
       roles: ['admin'],
     });

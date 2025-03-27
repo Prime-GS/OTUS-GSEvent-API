@@ -51,13 +51,12 @@ export class CommentsService {
   }
 
   async upsertComment(input: CommentDTO) {
-    const comment = input.id
-      ? await this.findByIdOrFail(input.id)
-      : this.commentsRepository.create({
-          ...input,
-        });
-
-    return this.commentsRepository.save(comment);
+    // const comment = input.id
+    //   ? await this.findByIdOrFail(input.id)
+    //   : this.commentsRepository.create({
+    //       ...input,
+    //     });
+    // return this.commentsRepository.save(comment);
   }
 
   async deleteComment(id: number): Promise<boolean> {

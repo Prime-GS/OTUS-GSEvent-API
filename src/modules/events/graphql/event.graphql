@@ -36,6 +36,7 @@ type EventResponse {
 type Query {
   events(pagination: PaginationInput, filter: FilterInput): EventResponse!
   event(id: Int!): Event
+  eventBySlug(slug: String!): Event
 }
 
 type Mutation {

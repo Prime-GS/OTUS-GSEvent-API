@@ -33,12 +33,6 @@ export class EventsResolver {
   ): Promise<IListResponse<Event>> {
     return this.eventsService.find(pagination, filter);
   }
-
-  @Query()
-  @AuthUser()
-  event(@Args('id') id: number) {
-    return this.eventsService.findById(id);
-  }
   @ResolveField()
   async categoriesIds(@Parent() event: Event) {
     return event.categories?.map((c) => c.id) ?? [];
@@ -46,6 +40,18 @@ export class EventsResolver {
   @ResolveField()
   async subscribersIds(@Parent() event: Event) {
     return event.subscribers?.map((c) => c.id) ?? [];
+  }
+
+  @Query()
+  @AuthUser()
+  event(@Args('id') id: number) {
+    return this.eventsService.findById(id);
+  }
+
+  @Query()
+  @AuthUser()
+  eventBySlug(@Args('slug') slug: string) {
+    return this.eventsService.findBySlug(slug);
   }
 
   @Mutation()

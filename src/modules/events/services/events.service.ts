@@ -46,6 +46,13 @@ export class EventsService {
     });
   }
 
+  findBySlug(slug: string): Promise<Event | null> {
+    return this.eventsRepository.findOne({
+      where: { slug },
+      relations: ['subscribers'],
+    });
+  }
+
   async findByIdOrFail(id: number) {
     const event = await this.findById(id);
     if (!event) {

@@ -20,6 +20,7 @@ import { User } from '@/modules/users/entities';
 import { EventsService } from '../services';
 import { Event } from '../entities';
 import { EventDTO } from '../dto';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Resolver('Event')
 export class EventsResolver {
@@ -53,8 +54,9 @@ export class EventsResolver {
 
   @Mutation()
   @AuthUser()
-  toggleSubscribe(@Args('input') { id, email }: { id: number; email: string }) {
-    return this.eventsService.toggleSubscribe(id, email);
+  toggleSubscribe(@CurrentUser() user: User, @Args('id') id: number) {
+    if (!user) throw new UnauthorizedException();
+    return this.eventsService.toggleSubscribe(id, user);
   }
 
   @Mutation()

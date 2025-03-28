@@ -28,6 +28,7 @@ type Query {
 type Mutation {
   login(input: LoginInput!): AuthResponse!
   registration(input: RegistrationInput!): AuthResponse!
+  checkEmail(email: String!): Boolean! 
   updateMyProfile(input: UpdateInput!): User!
   forgotPassword(email: String!): Boolean!
   verifyToken(token: String!): Boolean!

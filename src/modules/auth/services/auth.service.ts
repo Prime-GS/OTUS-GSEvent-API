@@ -47,6 +47,14 @@ export class AuthService {
     };
   }
 
+  async checkEmail(email: string) {
+    const check = await this.usersService.findByEmail(email);
+    if (check?.email === email) {
+      return false;
+    }
+    return true;
+  }
+
   async updateMyProfile(input: UpdateUserDTO): Promise<User> {
     return this.usersService.updateProfile(input);
   }

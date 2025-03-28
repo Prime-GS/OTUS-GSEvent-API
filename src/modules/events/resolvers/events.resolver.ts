@@ -26,7 +26,6 @@ export class EventsResolver {
   constructor(private readonly eventsService: EventsService) {}
 
   @Query()
-  @AuthUser()
   events(
     @Args('pagination') pagination?: IPaginationInput,
     @Args('filter') filter?: IFilter,
@@ -43,13 +42,11 @@ export class EventsResolver {
   }
 
   @Query()
-  @AuthUser()
   event(@Args('id') id: number) {
     return this.eventsService.findById(id);
   }
 
   @Query()
-  @AuthUser()
   eventBySlug(@Args('slug') slug: string) {
     return this.eventsService.findBySlug(slug);
   }
@@ -68,6 +65,7 @@ export class EventsResolver {
 
   @Mutation()
   @AuthUser()
+  @Roles(UserRole.admin)
   deleteEvent(@CurrentUser() user: User, @Args('id') id: number) {
     return this.eventsService.deleteEvent(id, user);
   }

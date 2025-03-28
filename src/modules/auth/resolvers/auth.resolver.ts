@@ -29,6 +29,11 @@ export class AuthResolver {
   }
 
   @Mutation()
+  async checkEmail(@Args('email') email: string): Promise<boolean> {
+    return await this.authService.checkEmail(email);
+  }
+
+  @Mutation()
   @AuthUser()
   async updateMyProfile(@Args('input') input: UpdateUserDTO): Promise<User> {
     return await this.authService.updateMyProfile(input);
@@ -37,13 +42,5 @@ export class AuthResolver {
   @Mutation()
   verifyToken(@Args('token') token: string) {
     return this.authService.verifyToken(token);
-  }
-
-  @Mutation()
-  resetPassword(
-    @Args('token') token: string,
-    @Args('newPassword') newPassword: string,
-  ) {
-    return this.authService.resetPassword(token, newPassword);
   }
 }

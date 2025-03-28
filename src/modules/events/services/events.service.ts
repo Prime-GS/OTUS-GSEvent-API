@@ -61,14 +61,15 @@ export class EventsService {
     return event;
   }
 
-  async toggleSubscribe(eventId: number, email: string) {
+  async toggleSubscribe(eventId: number, user: User) {
     try {
       const event = await this.findByIdOrFail(eventId);
 
-      const user = await this.usersService.findByEmailOrFail(email);
+      const subscribersIds = event.subscribers.map((s) => s.id);
 
-      if (event.subscribers?.includes(user)) {
-        event.subscribers.filter((u) => u.id !== user.id);
+      if (subscribersIds.includes(user.id)) {
+        const index = event.subscribers.findIndex((u) => u.id === user.id);
+        event.subscribers.splice(index, 1);
       } else {
         event.subscribers.push(user);
       }

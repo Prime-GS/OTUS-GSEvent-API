@@ -20,13 +20,13 @@ import { User } from '@/modules/users/entities';
 import { EventsService } from '../services';
 import { Event } from '../entities';
 import { EventDTO } from '../dto';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Resolver('Event')
 export class EventsResolver {
   constructor(private readonly eventsService: EventsService) {}
 
   @Query()
-  @AuthUser()
   events(
     @Args('pagination') pagination?: IPaginationInput,
     @Args('filter') filter?: IFilter,
@@ -43,21 +43,20 @@ export class EventsResolver {
   }
 
   @Query()
-  @AuthUser()
   event(@Args('id') id: number) {
     return this.eventsService.findById(id);
   }
 
   @Query()
-  @AuthUser()
   eventBySlug(@Args('slug') slug: string) {
     return this.eventsService.findBySlug(slug);
   }
 
   @Mutation()
   @AuthUser()
-  toggleSubscribe(@Args('input') { id, email }: { id: number; email: string }) {
-    return this.eventsService.toggleSubscribe(id, email);
+  toggleSubscribe(@CurrentUser() user: User, @Args('id') id: number) {
+    if (!user) throw new UnauthorizedException();
+    return this.eventsService.toggleSubscribe(id, user);
   }
 
   @Mutation()
@@ -68,6 +67,7 @@ export class EventsResolver {
 
   @Mutation()
   @AuthUser()
+  @Roles(UserRole.admin)
   deleteEvent(@CurrentUser() user: User, @Args('id') id: number) {
     return this.eventsService.deleteEvent(id, user);
   }

@@ -48,8 +48,12 @@ export class UsersService {
     });
   }
 
+  async findByEmail(email: string) {
+    return await this.usersRepository.findOneBy({ email });
+  }
+
   async findByEmailOrFail(email: string) {
-    const user = await this.usersRepository.findOneBy({ email });
+    const user = await this.findByEmail(email);
 
     if (!user) {
       throw new BadRequestException('Пользователь не найден');

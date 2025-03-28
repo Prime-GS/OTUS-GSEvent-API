@@ -21,7 +21,8 @@ input UserInput {
 
 input UpdateUserInput {
   id: Int!
-  email: String
+  username: String!
+  email: String!
   password: String
 }
 

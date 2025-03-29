@@ -8,7 +8,6 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { Event } from '../../events/entities';
 import { User } from '../../users/entities';
 
 @Entity({ name: 'events_comments' })
@@ -21,10 +20,6 @@ export class EventComment {
 
   @Column({ name: 'event_id' })
   eventId: number;
-
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'event_id' })
-  event: Event;
 
   @Column({ name: 'author_id' })
   authorId: number;

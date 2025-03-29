@@ -1,7 +1,6 @@
 export class CommentDTO {
   id?: number;
   message: string;
-  authorId: number;
-  eventId: string | null;
+  eventId: number;
   answerTo?: number | null;
 }

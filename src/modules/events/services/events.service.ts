@@ -2,10 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 
-import { IFilter, IPaginationInput } from '../../../common/interfaces';
-import { CategoriesService } from '../../categories/services';
-import { IListResponse } from '../../../common/interfaces';
-import { UsersService } from '../../users/services';
+import { User } from '@/modules/users/entities';
+import { IFilter, IPaginationInput } from '@/common/interfaces';
+import { CategoriesService } from '@/modules/categories/services';
+import { UsersService } from '@/modules/users/services';
+import { IListResponse } from '@/common/interfaces';
 import { Event } from '../entities';
 import { EventDTO } from '../dto';
 
@@ -45,6 +46,13 @@ export class EventsService {
     });
   }
 
+  findBySlug(slug: string): Promise<Event | null> {
+    return this.eventsRepository.findOne({
+      where: { slug },
+      relations: ['subscribers'],
+    });
+  }
+
   async findByIdOrFail(id: number) {
     const event = await this.findById(id);
     if (!event) {
@@ -53,14 +61,15 @@ export class EventsService {
     return event;
   }
 
-  async toggleSubscribe(eventId: number, email: string) {
+  async toggleSubscribe(eventId: number, user: User) {
     try {
       const event = await this.findByIdOrFail(eventId);
 
-      const user = await this.usersService.findByEmailOrFail(email);
+      const subscribersIds = event.subscribers.map((s) => s.id);
 
-      if (event.subscribers?.includes(user)) {
-        event.subscribers.filter((u) => u.id !== user.id);
+      if (subscribersIds.includes(user.id)) {
+        const index = event.subscribers.findIndex((u) => u.id === user.id);
+        event.subscribers.splice(index, 1);
       } else {
         event.subscribers.push(user);
       }
@@ -73,26 +82,31 @@ export class EventsService {
     }
   }
 
-  async upsertEvent(input: EventDTO) {
+  async upsertEvent(input: EventDTO, user: User) {
     const event = input.id
       ? await this.findByIdOrFail(input.id)
-      : this.eventsRepository.create();
+      : this.eventsRepository.create({ creatorId: user.id });
+
+    if (!user.roles?.includes('admin') && event.creatorId !== user.id) {
+      throw new BadRequestException(
+        'Вы не имеете прав редактировать данный ивент',
+      );
+    }
 
     event.title = input.title ?? event.title;
+    event.slug = input.slug ?? event.slug;
     event.description = input.description ?? event.description;
     event.startedAt = input.startedAt ?? event.startedAt;
 
-    if (input.categoriesIds) {
-      const categories = await this.categoriesService.findByIds(
-        input.categoriesIds,
-      );
-      event.categories = categories ?? [];
-    }
+    const categories = await this.categoriesService.findByIds(
+      input.categoriesIds,
+    );
+    event.categories = categories ?? [];
 
     return this.eventsRepository.save(event);
   }
 
-  async deleteEvent(id: number): Promise<boolean> {
+  async deleteEvent(id: number, user: User): Promise<boolean> {
     const event = await this.findById(id);
     if (!event) {
       return false;

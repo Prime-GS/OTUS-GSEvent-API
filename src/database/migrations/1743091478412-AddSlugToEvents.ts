@@ -1,11 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Events1740650184935 implements MigrationInterface {
-  name = 'Events1740650184935';
+export class AddSlugToEvents1743091478412 implements MigrationInterface {
+  name = 'Events1743091478412';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "events" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "description" text NOT NULL, "started_at" TIMESTAMP NOT NULL, "creator_id" integer NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_40731c7151fe4be3116e45ddf73" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "events" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "slug" character varying NOT NULL, "description" text NOT NULL, "started_at" TIMESTAMP NOT NULL, "creator_id" integer NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_05bd884c03d3f424e2204bd14cd" UNIQUE ("slug"), CONSTRAINT "PK_40731c7151fe4be3116e45ddf73" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "events_comments" ("id" SERIAL NOT NULL, "message" character varying NOT NULL, "event_id" integer NOT NULL, "author_id" integer NOT NULL, "answer_to" integer, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_823ed13daba141213a21e743817" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "events_categories" ("event_id" integer NOT NULL, "category_id" integer NOT NULL, CONSTRAINT "PK_f954dfe6ccfd98d3a63dd1a1e40" PRIMARY KEY ("event_id", "category_id"))`,
@@ -27,6 +30,12 @@ export class Events1740650184935 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "events" ADD CONSTRAINT "FK_39f98b48445861611ea17108071" FOREIGN KEY ("creator_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "events_comments" ADD CONSTRAINT "FK_a925416ae1fbae4b0225b12e67d" FOREIGN KEY ("event_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "events_comments" ADD CONSTRAINT "FK_a5dd038dce3357ecaa1502bcb0c" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "events_categories" ADD CONSTRAINT "FK_66f46f69a7d83fb65124ea33348" FOREIGN KEY ("event_id") REFERENCES "events"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -56,6 +65,12 @@ export class Events1740650184935 implements MigrationInterface {
       `ALTER TABLE "events_categories" DROP CONSTRAINT "FK_66f46f69a7d83fb65124ea33348"`,
     );
     await queryRunner.query(
+      `ALTER TABLE "events_comments" DROP CONSTRAINT "FK_a5dd038dce3357ecaa1502bcb0c"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "events_comments" DROP CONSTRAINT "FK_a925416ae1fbae4b0225b12e67d"`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "events" DROP CONSTRAINT "FK_39f98b48445861611ea17108071"`,
     );
     await queryRunner.query(
@@ -72,6 +87,7 @@ export class Events1740650184935 implements MigrationInterface {
       `DROP INDEX "public"."IDX_66f46f69a7d83fb65124ea3334"`,
     );
     await queryRunner.query(`DROP TABLE "events_categories"`);
+    await queryRunner.query(`DROP TABLE "events_comments"`);
     await queryRunner.query(`DROP TABLE "events"`);
   }
 }

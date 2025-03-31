@@ -1,9 +1,12 @@
 type Event {
   id: Int!
   title: String!
+  slug: String!
   description: String!
   startedAt: Date!
+  categoriesIds: [Int!]
   categories: [Category!]
+  subscribersIds: [Int!]
   subscribers: [User!]
   creatorId: Int!
   creator: User
@@ -11,18 +14,13 @@ type Event {
   updatedAt: Date!
 }
 
-input SubscribeInput {
-  email: String!
-  id: Int!
-}
-
 input EventInput {
   id: Int
   title: String!
+  slug: String!
   description: String!
   startedAt: Date!
   categoriesIds: [Int!]
-  creatorId: Int!
 }
 
 type EventResponse {
@@ -30,14 +28,14 @@ type EventResponse {
   total: Int!
 }
 
-
 type Query {
   events(pagination: PaginationInput, filter: FilterInput): EventResponse!
   event(id: Int!): Event
+  eventBySlug(slug: String!): Event
 }
 
 type Mutation {
-  toggleSubscribe(input: SubscribeInput!): Boolean!
+  toggleSubscribe(id: Int!): Boolean!
   upsertEvent(input: EventInput!): Event!
   deleteEvent(id: Int!): Boolean!
 }

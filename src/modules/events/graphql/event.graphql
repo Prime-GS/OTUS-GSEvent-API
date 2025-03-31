@@ -1,0 +1,41 @@
+type Event {
+  id: Int!
+  title: String!
+  slug: String!
+  description: String!
+  startedAt: Date!
+  categoriesIds: [Int!]
+  categories: [Category!]
+  subscribersIds: [Int!]
+  subscribers: [User!]
+  creatorId: Int!
+  creator: User
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+input EventInput {
+  id: Int
+  title: String!
+  slug: String!
+  description: String!
+  startedAt: Date!
+  categoriesIds: [Int!]
+}
+
+type EventResponse {
+  data: [Event!]!
+  total: Int!
+}
+
+type Query {
+  events(pagination: PaginationInput, filter: FilterInput): EventResponse!
+  event(id: Int!): Event
+  eventBySlug(slug: String!): Event
+}
+
+type Mutation {
+  toggleSubscribe(id: Int!): Boolean!
+  upsertEvent(input: EventInput!): Event!
+  deleteEvent(id: Int!): Boolean!
+}

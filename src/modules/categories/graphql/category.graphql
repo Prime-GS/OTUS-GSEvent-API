@@ -1,0 +1,30 @@
+type Category {
+  id: Int!
+  title: String!
+  description: String
+  color: String
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+input CategoryInput {
+  id: Int
+  title: String!
+  description: String
+  color: String
+}
+
+type CategoriesResponse {
+  data: [Category!]!
+  total: Int!
+}
+
+type Query {
+  categories(pagination: PaginationInput, filter: FilterInput): CategoriesResponse!
+  category(id: Int!): Category
+}
+
+type Mutation {
+  upsertCategory(input: CategoryInput!): Category!
+  deleteCategory(id: Int!): Boolean!
+}

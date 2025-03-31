@@ -1,0 +1,29 @@
+type Comment {
+  id: Int!
+  message: String!
+  eventId: Int!
+  event: Event!
+  authorId: Int!
+  author: User!
+  answerTo: Int
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+input CommentInput {
+  id: Int
+  message: String!
+  eventId: Int!
+  authorId: Int!
+  answerTo: Int
+}
+
+type Query {
+  comments(pagination: PaginationInput, filter: FilterInput): [Comment!]
+  comment(id: Int!): Comment
+}
+
+type Mutation {
+  upsertComment(input: CommentInput!): Comment!
+  deleteComment(id: Int!): Boolean!
+}

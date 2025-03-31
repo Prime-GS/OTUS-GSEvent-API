@@ -1,0 +1,17 @@
+directive @admin on OBJECT | FIELD_DEFINITION
+
+# scalar DateTime
+scalar Date
+
+input PaginationInput {
+  offset: Int
+  limit: Int
+}
+
+input FilterInput {
+  query: String!
+}
+
+type CheckResponse {
+  success: Boolean!
+}
